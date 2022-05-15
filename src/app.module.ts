@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { join } from 'path';
 import { BlogModule } from './blog/blog.module';
 import { ApolloDriver } from '@nestjs/apollo';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     GraphQLModule.forRoot({
@@ -15,6 +16,7 @@ import { ApolloDriver } from '@nestjs/apollo';
       sortSchema: true,
     }),
     BlogModule,
+    ConfigModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
