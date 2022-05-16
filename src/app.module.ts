@@ -6,6 +6,8 @@ import { join } from 'path';
 import { BlogModule } from './blog/blog.module';
 import { ApolloDriver } from '@nestjs/apollo';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Blog } from './blog/models/blog.models';
 @Module({
   imports: [
     GraphQLModule.forRoot({
@@ -14,6 +16,16 @@ import { ConfigModule } from '@nestjs/config';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       // 生成されたschemaを自動でsortされるためのオプションをオンにする
       sortSchema: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '',
+      database: 'nest_gql',
+      entities: [Blog],
+      synchronize: true,
     }),
     BlogModule,
     ConfigModule.forRoot(),

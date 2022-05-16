@@ -1,19 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { NewBlogInput } from './dto/newBlog.input';
 import { Blog } from './models/blog.models';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class BlogService {
-  private blogs: Blog[] = [];
+  constructor(
+    @InjectRepository(Blog)
+    private blogRepository: Repository<Blog>,
+  ) {}
 
-  findAll(): Blog[] {
-    return this.blogs;
+  findAll(): Promise<Blog[]> {
+    return this.blogRepository.find();
   }
 
-  findOneById(id: string): Blog {
-    const result = this.blogs.find((blog) => blog.id === id);
-    if (!result) {
-      throw new Error('Blog not found');
-    }
-    return result;
+  findOneById(id: number): Promise<Blog> {
+    return this.blogRepository.findOne(id);
+  }
+
+  async create(data: NewBlogInput): Promise<Blog> {
+    const blog = this.blogRepository.create(data);
+    await this.blogRepository.save(blog);
+    return blog;
+  }
+
+  async remove(id: number): Promise<boolean> {
+    const result = await this.blogRepository.delete(id);
+    return result.affected > 0;
   }
 }

@@ -15,7 +15,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Mutation {
+  removeBlog(id: Int!): Boolean!
+}
+
 type Query {
-  findAll: [Blog]!
-  findOneById(id: ID!): Blog!
+  blogs: [Blog!]!
+  getBlog(id: Int!): Blog!
 }
