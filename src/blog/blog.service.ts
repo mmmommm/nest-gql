@@ -3,6 +3,9 @@ import { NewBlogInput } from './dto/newBlog.input';
 import { Blog } from './models/blog.models';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateBlogDto } from './dto/createBlog.dto';
+import { Blog } from './models/blog.models';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class BlogService {
@@ -28,5 +31,16 @@ export class BlogService {
   async remove(id: number): Promise<boolean> {
     const result = await this.blogRepository.delete(id);
     return result.affected > 0;
+  }
+
+  create(createBlogDto: CreateBlogDto): Blog {
+    const newBlog = {
+      ...CreateBlogDto,
+      id: uuidv4(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.blogs.push(newBlog);
+    return newBlog;
   }
 }
